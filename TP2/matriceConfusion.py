@@ -13,6 +13,7 @@ Y,random_state=0)
 
 clf=tree.DecisionTreeClassifier()
 clf=clf.fit(X_train, Y_train)
+
 Y_pred =clf.predict(X_test)
 
 

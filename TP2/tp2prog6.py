@@ -8,12 +8,12 @@ from sklearn.datasets import load_digits
 digits=load_digits()
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import KFold
+from sklearn.metrics import confusion_matrix
 
 def get_leaf_with_crossed_validation(X, Y):
 	kf=KFold(n_splits=10,shuffle=True)
 	scores=[]
-	# METTRE A 30
-	for k in range(2,30):
+	for k in range(2,4):
 		score=0
 		clf=tree.DecisionTreeClassifier(max_leaf_nodes=k)
 		for learn,test in kf.split(X):
@@ -29,26 +29,30 @@ def get_leaf_with_crossed_validation(X, Y):
 	print("meilleure valeur pour k : ", k)
 	return k
 
-def train_clf (crit, nbLeaf, X_train, Y_train, X_test, Y_test):
-	clf=tree.DecisionTreeClassifier(criterion=crit, max_leaf_nodes=nbLeaf)
-	clf = clf.fit(X_train,Y_train)
-	
+def value_error (clf,X_train, Y_train, X_test, Y_test):
 	N=1000
 	e = 1-clf.score(X_test,Y_test)
-	print("%6.4f" %e)
+	print("Erreur de %6.4f" %e)
 	binf = e - 1.96 * math.sqrt((e * (1-e))/N)
 	bsup = e + 1.96 * math.sqrt((e * (1-e))/N)
-	"""
+	
 	print ("intervalle de confiance I")
 	print ("	binf = %6.4f" %binf)
 	print ("	bsup = %6.4f" %bsup)
-	print ("Erreur estimee f sur X_2, Y_2")
-	"""
-	"""
-	f = 1-clf.score(X_2,Y_2)
-	#print ("	f = %6.4f" %f)
-	"""
+	'''
+	print ("Erreur estimee f sur X_train, Y_train")
+	f = 1-clf.score(X_train,Y_train)
+	print ("	f = %6.4f" %f)
+	'''
+
+def train_clf (crit,nbLeaf,X_train,Y_train,X_test,Y_test):
+	
+	clf=tree.DecisionTreeClassifier(criterion=crit, max_leaf_nodes=nbLeaf)
+	clf = clf.fit(X_train,Y_train)
+	value_error(clf,X_train, Y_train, X_test, Y_test)
+	
 	return clf
+
 
 def synthese():
 	#print (digits.data[0])
@@ -69,8 +73,30 @@ def synthese():
 	L_train = get_leaf_with_crossed_validation(X_train, Y_train)
 	
 	# Gini
+	print ('Gini')
 	clfG = train_clf('gini', L_train, X_train,Y_train,X_test,Y_test)
-	clfG = train_clf('entropy', L_train, X_train,Y_train,X_test,Y_test)
+	print ('entropy')
+	clfE = train_clf('entropy', L_train, X_train,Y_train,X_test,Y_test)
+
 	
+	Y_predG = clfG.predict(X_test)
+	Y_predE = clfE.predict(X_test)
+	
+	cmG = confusion_matrix(Y_test, Y_predG)
+	cmE = confusion_matrix(Y_test, Y_predE)
+	print('cmG : ')
+	print(cmG)
+	print('cmE : ')
+	print(cmE)
+	print()
+	print (cmE[0][:])
 	
 synthese()
+
+
+
+
+
+
+
+
