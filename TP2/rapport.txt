@@ -1,0 +1,153 @@
+
+2.1) 9 feuilles. 
+
+2.2) Les arbres sont très similaires.
+
+2.3)
+train
+0.8678
+0.9046
+0.9263
+0.9423
+0.9540
+0.9623
+0.9699
+0.9775
+0.9848
+0.9895
+0.9942
+0.9984
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+test
+0.8943
+0.9366
+0.9604
+0.9776
+0.9914
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+
+
+Au début le classifieur est précis mais toujours avec une marge d'erreur.
+A force de relancer avec plus de feuilles, le classifieur est de plus en
+plus précis (apprends de mieux en mieux) et se trompe de moins en 
+moins jusqu'à atteindre un score optimal (1). Le score optimal est atteint
+en peu d'itérations.
+
+2.4)
+train
+0.4609
+0.5542
+0.6001
+0.6364
+0.6828
+0.7155
+0.7501
+0.7788
+0.8074
+0.8358
+0.8628
+0.8894
+0.9143
+0.9347
+0.9512
+0.9647
+0.9741
+0.9810
+0.9859
+0.9902
+0.9933
+0.9956
+0.9971
+0.9978
+0.9984
+0.9990
+0.9992
+0.9994
+0.9997
+0.9999
+0.9999
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+test
+0.4610
+0.5604
+0.5910
+0.6350
+0.6795
+0.7239
+0.7595
+0.7975
+0.8277
+0.8578
+0.8903
+0.9169
+0.9375
+0.9543
+0.9667
+0.9773
+0.9839
+0.9887
+0.9918
+0.9943
+0.9963
+0.9975
+0.9986
+0.9990
+0.9993
+0.9996
+0.9997
+0.9998
+0.9999
+0.9999
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+1.0000
+
+
+Au début le classifieur n'est pas très précis.
+A force de relancer avec une profondeur plus importante,
+le classifieur est de plus en plus précis.
+Il progresse d'ailleurs très vite sur les premières itérations et progresse
+bien plus lentement dès lors qu'il se rapproche d'un score de 1.
+
+4.1) 
+intervalle de confiance I
+	binf = 0.2512
+	bsup = 0.3068
+Erreur estimee f sur X_2, Y_2
+	f = 0.2843
+
+4.2)
+f n'appartient pas à I 2 fois sur 100.
+
