@@ -13,7 +13,7 @@ from sklearn.metrics import confusion_matrix
 def get_leaf_with_crossed_validation(X, Y):
 	kf=KFold(n_splits=10,shuffle=True)
 	scores=[]
-	for k in range(2,4):
+	for k in range(2,30):
 		score=0
 		clf=tree.DecisionTreeClassifier(max_leaf_nodes=k)
 		for learn,test in kf.split(X):
@@ -39,11 +39,6 @@ def value_error (clf,X_train, Y_train, X_test, Y_test):
 	print ("intervalle de confiance I")
 	print ("	binf = %6.4f" %binf)
 	print ("	bsup = %6.4f" %bsup)
-	'''
-	print ("Erreur estimee f sur X_train, Y_train")
-	f = 1-clf.score(X_train,Y_train)
-	print ("	f = %6.4f" %f)
-	'''
 
 def train_clf (crit,nbLeaf,X_train,Y_train,X_test,Y_test):
 	
@@ -53,6 +48,19 @@ def train_clf (crit,nbLeaf,X_train,Y_train,X_test,Y_test):
 	
 	return clf
 
+def mcNemar (Y_test, Y_predG, Y_predE):
+	n10=0
+	n01=0
+	
+	for test in Y_test:
+		if Y_test[test] == Y_predG[test]:		
+			n10+=1
+		if Y_test[test] != Y_predE[test]:
+			n01+=1
+	
+	res = pow(abs(n01-n10) - 1, 2) / (n01+n10)
+	print ("mcNemar : ", res)
+	
 
 def synthese():
 	#print (digits.data[0])
@@ -73,6 +81,7 @@ def synthese():
 	L_train = get_leaf_with_crossed_validation(X_train, Y_train)
 	
 	# Gini
+	print()
 	print ('Gini')
 	clfG = train_clf('gini', L_train, X_train,Y_train,X_test,Y_test)
 	print ('entropy')
@@ -84,12 +93,14 @@ def synthese():
 	
 	cmG = confusion_matrix(Y_test, Y_predG)
 	cmE = confusion_matrix(Y_test, Y_predE)
-	print('cmG : ')
+	print('confusionMatrixG : ')
 	print(cmG)
-	print('cmE : ')
+	print('confusionMatrixE : ')
 	print(cmE)
 	print()
-	print (cmE[0][:])
+	
+	mcNemar(Y_test, Y_predG, Y_predE)
+	
 	
 synthese()
 
