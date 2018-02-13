@@ -144,7 +144,7 @@ def tp2prog5():
 def get_leaf_with_crossed_validation(X, Y):
 	kf=KFold(n_splits=10,shuffle=True)
 	scores=[]
-	for k in range(2,30):
+	for k in range(2,1000, 10):
 		score=0
 		clf=tree.DecisionTreeClassifier(max_leaf_nodes=k)
 		for learn,test in kf.split(X):
@@ -182,16 +182,84 @@ def train_clf (crit,nbLeaf,X_train,Y_train,X_test,Y_test):
 def mcNemar (Y_test, Y_predG, Y_predE):
 	n10=0
 	n01=0
-	
-	for test in Y_test:
-		if Y_test[test] == Y_predG[test]:		
+	test=0
+	while test<len(Y_test):
+		'''
+		print ("Y_test["+str(test)+"] = "+str(Y_test[test]))
+		print ("Y_predG["+str(test)+"] = "+str(Y_predG[test]))
+		print ("Y_predE["+str(test)+"] = "+str(Y_predE[test]))
+		'''
+		if Y_test[test] == Y_predG[test] and Y_test[test] != Y_predE[test]:		
 			n10+=1
-		if Y_test[test] != Y_predE[test]:
+		if Y_test[test] != Y_predG[test] and Y_test[test] == Y_predE[test]:
 			n01+=1
+		test+=1
 	
+	print ("n10 : ", n10)
+	print ("n01 : ", n01)
 	res = pow(abs(n01-n10) - 1, 2) / (n01+n10)
-	print ("mcNemar : ", res)
+	return res
+
+def test_synthese():
+	#print (digits.data[0])
+	#print (digits.images[0])
+	#print (digits.data[0].reshape(8,8))
+	#print (digits.target[0])
+	'''
+	pl.gray()
+	pl.matshow(digits.images[0])
+	pl.show()
+	'''
+	X = digits.data
+	Y = digits.target
 	
+	
+	bigger=0
+	lower=0
+	i=0
+	while i < 10:
+		
+		X_train,X_test,Y_train,Y_test=\
+		train_test_split(X,Y,test_size=0.3,random_state=random.seed())
+		
+		L_train = get_leaf_with_crossed_validation(X_train, Y_train)
+		print()
+		
+		# Gini
+		print ('Gini')
+		clfG = train_clf('gini', L_train, X_train,Y_train,X_test,Y_test)
+		print()
+		print ('entropy')
+		clfE = train_clf('entropy', L_train, X_train,Y_train,X_test,Y_test)
+		print()
+		
+		print("Y_predG")
+		Y_predG = clfG.predict(X_test)
+		print(Y_predG)
+		print()
+		
+		print("Y_predE")
+		Y_predE = clfE.predict(X_test)
+		print(Y_predE)
+		
+		
+		cmG = confusion_matrix(Y_test, Y_predG)
+		cmE = confusion_matrix(Y_test, Y_predE)
+		print('confusionMatrixG : ')
+		print(cmG)
+		print()
+		print('confusionMatrixE : ')
+		print(cmE)
+		print()
+		
+		res = mcNemar (Y_test, Y_predG, Y_predE)
+		if res >= 3.841459 :
+			bigger+=1
+		if res < 3.841459 :
+			lower+=1
+		i+=1
+	print ("nb fois bigger: ", bigger)
+	print ("nb fois lower: ", lower)
 
 def synthese():
 	#print (digits.data[0])
@@ -206,6 +274,9 @@ def synthese():
 	X = digits.data
 	Y = digits.target
 	
+	
+
+		
 	X_train,X_test,Y_train,Y_test=\
 	train_test_split(X,Y,test_size=0.3,random_state=random.seed())
 	
@@ -220,8 +291,15 @@ def synthese():
 	clfE = train_clf('entropy', L_train, X_train,Y_train,X_test,Y_test)
 	print()
 	
+	print("Y_predG")
 	Y_predG = clfG.predict(X_test)
+	print(Y_predG)
+	print()
+	
+	print("Y_predE")
 	Y_predE = clfE.predict(X_test)
+	print(Y_predE)
+	
 	
 	cmG = confusion_matrix(Y_test, Y_predG)
 	cmE = confusion_matrix(Y_test, Y_predE)
@@ -232,7 +310,8 @@ def synthese():
 	print(cmE)
 	print()
 	
-	mcNemar(Y_test, Y_predG, Y_predE)
+	print ("mcNemar : ", mcNemar (Y_test, Y_predG, Y_predE))
+	
 
 
 
