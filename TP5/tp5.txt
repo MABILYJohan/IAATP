@@ -1,0 +1,10 @@
+
+1.1.1)
+	MLP fait-il mieux ? Non, avec des variations sur "l'hidden_layer_sizes" ( entre 3 a 30 ), nous pouvons observer que le score n'est jamais au dessus de 0.9375.
+Un MLP est un ensemble de perceptron non Gaussien, et donc individuellement ne peuvent pas trouver la solution contrairement au perceptron à noyau Gaussien.
+
+1.1.4)
+	le dessin forme une hyperbole
+
+	Lasso est meilleur!
+	
